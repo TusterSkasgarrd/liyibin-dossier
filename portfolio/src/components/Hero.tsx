@@ -24,7 +24,7 @@ export function Hero() {
 
   return (
     <section className="hero" id="top" onMouseMove={handleMove}>
-      {/* 背景视频：纯装饰，读屏器忽略 */}
+      {/* 背景视频：纯装饰，读屏器忽略；路径带 BASE_URL，兼容 GitHub Pages 子路径 */}
       {showVideo && (
         <video
           className="hero__video"
@@ -32,11 +32,11 @@ export function Hero() {
           muted
           loop
           playsInline
-          poster="/hero-bg-poster.jpg"
+          poster={`${import.meta.env.BASE_URL}hero-bg-poster.jpg`}
           aria-hidden="true"
           tabIndex={-1}
         >
-          <source src="/hero-bg.mp4" type="video/mp4" />
+          <source src={`${import.meta.env.BASE_URL}hero-bg.mp4`} type="video/mp4" />
         </video>
       )}
       <div className="hero__veil" aria-hidden="true" />
