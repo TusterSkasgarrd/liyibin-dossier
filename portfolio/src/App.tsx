@@ -25,8 +25,8 @@ export function App() {
     return sessionStorage.getItem('intro-done') === '1';
   });
 
-  // 后台：/admin
-  if (window.location.pathname.startsWith('/admin')) return <Admin />;
+  // 后台：/admin（兼容 GitHub Pages 子路径 /liyibin-dossier/admin）
+  if (window.location.pathname.replace(/\/+$/, '').endsWith('/admin')) return <Admin />;
 
   if (!introDone) {
     return (

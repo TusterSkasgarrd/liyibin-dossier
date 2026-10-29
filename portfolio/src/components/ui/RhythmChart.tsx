@@ -1,5 +1,5 @@
-import { notes } from '../../data/notes';
-import { projects } from '../../data/projects';
+// 月度产出节奏柱状图：项目/笔记数据由父组件从 useData() 传入
+import type { Note, Project } from '../../data/types';
 
 const C = {
   weak: 'var(--line-weak)',
@@ -13,26 +13,31 @@ const ORIGIN_Y = 2025;
 const ORIGIN_M = 9;
 const MONTHS = 15; // 2025.09 → 2026.11
 
+interface RhythmChartProps {
+  projects: Project[];
+  notes: Note[];
+}
+
 function monthIndex(y: number, m: number): number {
   return (y - ORIGIN_Y) * 12 + (m - ORIGIN_M);
 }
 
 /** 每个项目在其起止月之间计 1 次活跃；笔记按发布日期计 1 次 */
-function buildLoad(): number[] {
-  const load = new Array(MONTHS).fill(0);
+function buildLoad(projects: Project[], notes: Note[]): number[] {
+  const load = new Array(MONTHS).fill(0) as number[];
 
   for (const p of projects) {
     const parts = p.period.replace(/\s/g, '').split('—');
-    const s = parts[0].split('.').map(Number);
-    const e = (parts[1] || parts[0]).split('.').map(Number);
-    const from = monthIndex(s[0], s[1]);
-    const to = monthIndex(e[0], e[1]);
+    const s = (parts[0] ?? '').split('.').map(Number);
+    const e = (parts[1] || parts[0] || '').split('.').map(Number);
+    const from = monthIndex(s[0] ?? 0, s[1] ?? 0);
+    const to = monthIndex(e[0] ?? 0, e[1] ?? 0);
     for (let i = Math.max(0, from); i <= Math.min(MONTHS - 1, to); i++) load[i] += 1;
   }
 
   for (const n of notes) {
     const [y, m] = n.date.split('.').map(Number);
-    const i = monthIndex(y, m);
+    const i = monthIndex(y ?? 0, m ?? 0);
     if (i >= 0 && i < MONTHS) load[i] += 2; // 写作权重更高
   }
 
@@ -45,8 +50,8 @@ const PAD_L = 26;
 const PAD_B = 26;
 const PAD_T = 14;
 
-export function RhythmChart() {
-  const load = buildLoad();
+export function RhythmChart({ projects, notes }: RhythmChartProps) {
+  const load = buildLoad(projects, notes);
   const max = Math.max(...load, 1);
   const barZone = W - PAD_L - 8;
   const slot = barZone / MONTHS;

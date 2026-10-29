@@ -9,7 +9,7 @@ import { RhythmChart } from './ui/RhythmChart';
 const GROUPS: SkillGroup[] = ['language', 'data', 'xr', 'hardware'];
 
 export function Skills() {
-  const { skills, skillGroupLabel } = useData();
+  const { skills, skillGroupLabel, projects, notes } = useData();
   return (
     <section className="section" id="skills">
       <div className="wrap">
@@ -44,11 +44,11 @@ export function Skills() {
           <aside className="skills-side">
             <div className="chart-card">
               <h3 className="chart-card__title">能力域分布</h3>
-              <SkillRadar />
+              <SkillRadar skills={skills} groupLabel={skillGroupLabel} />
             </div>
             <div className="chart-card">
               <h3 className="chart-card__title">产出节奏</h3>
-              <RhythmChart />
+              <RhythmChart projects={projects} notes={notes} />
             </div>
 
             <div className="chart-card chart-card--list">

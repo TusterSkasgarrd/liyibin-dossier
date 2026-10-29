@@ -1,5 +1,5 @@
-import { skillGroupLabel, skills } from '../../data/skills';
-import type { SkillGroup } from '../../data/types';
+// 四轴能力雷达图：数据由父组件从 useData() 传入，本文件不直接读种子
+import type { Skill, SkillGroup } from '../../data/types';
 
 const C = {
   line: 'var(--line-strong)',
@@ -12,8 +12,13 @@ const C = {
 
 const GROUPS: SkillGroup[] = ['language', 'data', 'xr', 'hardware'];
 
+interface SkillRadarProps {
+  skills: Skill[];
+  groupLabel: Record<SkillGroup, string>;
+}
+
 /** 每个能力域的平均熟练度（0–1） */
-function groupScore(group: SkillGroup): number {
+function groupScore(skills: Skill[], group: SkillGroup): number {
   const list = skills.filter((s) => s.group === group);
   if (!list.length) return 0;
   const avg = list.reduce((n, s) => n + s.level, 0) / list.length;
@@ -32,8 +37,8 @@ function point(axis: number, ratio: number): [number, number] {
   return [CX + Math.cos(angle) * R * ratio, CY + Math.sin(angle) * R * ratio];
 }
 
-export function SkillRadar() {
-  const scores = GROUPS.map(groupScore);
+export function SkillRadar({ skills, groupLabel }: SkillRadarProps) {
+  const scores = GROUPS.map((g) => groupScore(skills, g));
   const polygon = scores.map((v, i) => point(i, Math.max(v, 0.12)).join(',')).join(' ');
 
   return (
@@ -76,7 +81,7 @@ export function SkillRadar() {
               fontSize={9.5}
               fontFamily="system-ui, sans-serif"
             >
-              {skillGroupLabel[g]}
+              {groupLabel[g]}
             </text>
             <text
               x={x}

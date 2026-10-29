@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { profile } from '../data/profile';
+import { useData } from '../data/store';
 import { SectionHead } from './ui/SectionHead';
 
 export function Contact() {
+  const { profile } = useData();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {

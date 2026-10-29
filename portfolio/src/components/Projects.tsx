@@ -175,7 +175,7 @@ export function Projects() {
 
         <div className="chart-card chart-card--wide">
           <h3 className="chart-card__title">项目时间分布</h3>
-          <Gantt />
+          <Gantt projects={projects} />
         </div>
       </div>
     </section>

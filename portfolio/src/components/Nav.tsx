@@ -85,6 +85,15 @@ export function Nav() {
           ))}
         </nav>
 
+        <a className="nav__admin" href={`${import.meta.env.BASE_URL}admin`} title="进入后台管理">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="2" y="6.5" width="12" height="7" rx="1" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M4.5 6.5V5a3.5 3.5 0 0 1 7 0v1.5" stroke="currentColor" strokeWidth="1.2" />
+            <circle cx="8" cy="10" r="1.3" fill="currentColor" />
+          </svg>
+          后台
+        </a>
+
         <button
           className="nav__toggle"
           type="button"

@@ -1,4 +1,5 @@
-import { projects } from '../../data/projects';
+// 项目时间甘特图：项目数据由父组件从 useData() 传入
+import type { Project } from '../../data/types';
 
 const C = {
   line: 'var(--line-strong)',
@@ -9,6 +10,10 @@ const C = {
   muted: 'var(--txt-3)',
 };
 
+interface GanttProps {
+  projects: Project[];
+}
+
 /** 把 2026.03 这类年月解析成"从 2025.09 起的第几个月" */
 const ORIGIN_YEAR = 2025;
 const ORIGIN_MONTH = 9;
@@ -16,7 +21,7 @@ const TOTAL_MONTHS = 15; // 2025.09 → 2026.11
 
 function toIndex(period: string, which: 'start' | 'end'): number {
   const parts = period.replace(/\s/g, '').split('—');
-  const raw = (which === 'start' ? parts[0] : parts[1] || parts[0]).split('.');
+  const raw = (which === 'start' ? parts[0] : parts[1] || parts[0] || '').split('.');
   const y = Number(raw[0]);
   const m = Number(raw[1]);
   if (!y || !m) return 0;
@@ -28,7 +33,7 @@ const LABEL_W = 128;
 const BAR_ZONE = 360;
 const TOP = 26;
 
-export function Gantt() {
+export function Gantt({ projects }: GanttProps) {
   const height = TOP + projects.length * ROW_H + 26;
   const width = LABEL_W + BAR_ZONE + 16;
   const step = BAR_ZONE / TOTAL_MONTHS;

@@ -41,6 +41,18 @@ npm run build          # 产物 www/
 npm start              # 启动后端，监听 PORT（默认 3001）
 ```
 
+**环境变量（后端）**
+
+| 变量 | 默认值 | 说明 |
+|---|---|---|
+| `PORT` | `3001` | 服务端口 |
+| `ADMIN_TOKEN` | `admin123` | 写接口（PUT/POST/DELETE）管理口令，请求头 `x-admin-token` 传递；**公开部署必须改成随机值** |
+| `CORS_ORIGIN` | `*` | 跨域来源限制（前后端分离部署时收紧） |
+
+**开发模式**：`npm run dev`（5173）已内置 `/api` 代理到 `localhost:3001`，前后端联调无需额外配置；后端口令在后台页面顶部填写（默认 `admin123`）。
+
+**静态托管（GitHub Pages）**：无后端时后台改动写 localStorage，前台同样能读到（三通道逐键回落）。若要让静态站直连远程 API，构建时注入 `VITE_API_BASE=https://<后端域名> npm run build`。
+
 ## 技术栈
 
 | 层 | 选型 |
@@ -55,8 +67,8 @@ npm start              # 启动后端，监听 PORT（默认 3001）
 ```bash
 cd portfolio
 npm install          # registry 已指向 npmmirror
-npm run dev          # http://localhost:5173
-npm run build        # 产物 dist/
+npm run dev          # http://localhost:5173（/api 自动代理到 :3001）
+npm run build        # 产物 www/
 ```
 
 ## 目录
