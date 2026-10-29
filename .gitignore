@@ -1,0 +1,15 @@
+node_modules/
+dist/
+www/
+*.log
+.env
+.DS_Store
+~$*
+
+# 二进制媒体（另行托管或 LFS）
+*.webp
+*.mp4
+*.jpg
+*.jpeg
+*.png
+video/out/

@@ -1,0 +1,69 @@
+/* =========================================================
+   tokens.css · 全部设计变量
+   改主题色只改这里，全站跟随
+   ========================================================= */
+
+:root {
+  /* ---------- 底色 / 图纸 ---------- */
+  --bp-deep: #082f5e;          /* 图纸最深处 */
+  --bp-base: #0b3a70;          /* 主底色 */
+  --bp-mid: #0e4c92;           /* 中部亮区 */
+  --bp-raise: rgba(255, 255, 255, 0.03);  /* 卡片填充 */
+
+  /* ---------- 线 ---------- */
+  --line-strong: rgba(191, 216, 245, 0.55);
+  --line: rgba(191, 216, 245, 0.35);
+  --line-weak: rgba(191, 216, 245, 0.16);
+  --grid-fine: rgba(191, 216, 245, 0.07);
+  --grid-bold: rgba(191, 216, 245, 0.13);
+
+  /* ---------- 文字 ---------- */
+  --txt: #e8f1fb;
+  --txt-2: #a8c3e0;
+  --txt-3: #8faac9;   /* on #0B3A70 = 4.73:1，on #082F5E = 5.55:1 */
+
+  /* ---------- 强调 ---------- */
+  --accent: #ffd166;           /* 标注黄：尺寸线 / 编号 / hover */
+  --accent-soft: rgba(255, 209, 102, 0.14);
+  --cyan: #7fe7dc;             /* 链接 / 成功 */
+
+  /* ---------- 字体 ---------- */
+  --font-sans: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Segoe UI", sans-serif;
+  --font-mono: Consolas, "Courier New", "SFMono-Regular", monospace;
+
+  /* ---------- 字号 ---------- */
+  --fs-hero: clamp(40px, 7vw, 76px);
+  --fs-h2: clamp(26px, 3.6vw, 40px);
+  --fs-h3: clamp(17px, 2vw, 21px);
+  --fs-body: 15.5px;
+  --fs-small: 13.5px;
+  --fs-mono: 12px;
+  --fs-mono-sm: 11px;
+
+  /* ---------- 间距 ---------- */
+  --gap-1: 6px;
+  --gap-2: 12px;
+  --gap-3: 20px;
+  --gap-4: 32px;
+  --gap-5: 52px;
+  --gap-6: 84px;
+  --section-gap: clamp(52px, 6.6vw, 92px);
+
+  /* ---------- 版心 ---------- */
+  --wrap: 1200px;
+  --pad-x: clamp(20px, 5vw, 64px);
+
+  /* ---------- 动效 ---------- */
+  --ease-out: cubic-bezier(0.16, 0.84, 0.44, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 0.18s;
+  --dur: 0.32s;
+  --dur-slow: 0.7s;
+
+  /* ---------- 图层 ---------- */
+  --z-grid: -2;
+  --z-frame: 60;
+  --z-nav: 70;
+  --z-drawer: 80;
+}
