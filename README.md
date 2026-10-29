@@ -8,7 +8,38 @@
 
 ## 在线地址
 
-<https://imagegrab-site-44501.app.workbuddy.host/?sharecode=ER2X4YHN7D>
+- 前台：<https://imagegrab-site-44501.app.workbuddy.host/?sharecode=ER2X4YHN7D>
+- 后台管理：<https://imagegrab-site-44501.app.workbuddy.host/admin?sharecode=ER2X4YHN7D>
+- GitHub 源码：<https://github.com/TusterSkasgarrd/liyibin-dossier>
+
+## 架构：不是纯静态站
+
+```
+浏览器 ──> Node http 服务 (server/index.js, 零依赖)
+            ├── /           静态托管 www/（Vite 构建产物）
+            ├── /admin      SPA → 后台编辑界面
+            └── /api/*      读写 server/db.json（JSON 数据库，原子写）
+```
+
+- 前台数据从 `/api` 读，后端不可用时回落到 `src/data/*.ts` 本地种子
+- 后台六类数据（个人信息 / 技能 / 项目 / 笔记 / 时间线 / 数据条）可增删改
+- 数据库换 SQLite/Postgres 时只需改 `server/index.js` 的 `readDb/writeDb`
+
+## 媒体文件说明
+
+`*.webp` `*.mp4` `*.jpg` 等二进制媒体**不纳入 git**（`gitignore`），由部署平台托管。
+需要重新生成时：
+- 图片：豆包生成 → Pillow 压缩 → 放 `portfolio/src/assets/`
+- 视频：`video/` 目录下 Remotion 渲染 → 输出 `portfolio/public/hero-bg.mp4`
+
+## 本地运行
+
+```bash
+cd portfolio
+npm install
+npm run build          # 产物 www/
+npm start              # 启动后端，监听 PORT（默认 3001）
+```
 
 ## 技术栈
 
