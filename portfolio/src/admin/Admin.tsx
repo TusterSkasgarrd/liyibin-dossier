@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { Note, Profile, Project, Skill, SkillGroup, TimelineItem } from '../data/types';
-
-interface Db {
-  profile: Profile;
-  skills: Skill[];
-  projects: Project[];
-  notes: Note[];
-  timeline: TimelineItem[];
-  stats: { value: number; suffix: string; label: string }[];
-  skillGroupLabel: Record<SkillGroup, string>;
-}
+import type { Skill, SkillGroup, Project } from '../data/types';
+import type { Db } from '../data/store';
+import { loadDb, saveKey } from './persist';
 
 type Tab = 'profile' | 'skills' | 'projects' | 'notes' | 'timeline' | 'stats';
 
@@ -58,38 +50,31 @@ export function Admin() {
   const [saved, setSaved] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // 拉取
+  // 拉取（/api → localStorage → 种子）
   useEffect(() => {
-    (async () => {
-      try {
-        const keys: (keyof Db)[] = ['profile', 'skills', 'projects', 'notes', 'timeline', 'stats', 'skillGroupLabel'];
-        const out = {} as Db;
-        for (const k of keys) {
-          const r = await fetch(`/api/${k}`);
-          out[k] = await r.json();
-        }
-        setDb(out);
-      } catch (e) {
-        setError('读取数据失败：' + (e as Error).message);
-      }
-    })();
+    let alive = true;
+    loadDb()
+      .then((data) => {
+        if (alive) setDb(data);
+      })
+      .catch((e) => {
+        if (alive) setError('读取数据失败：' + (e as Error).message);
+      });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const save = async (key: keyof Db, value: unknown) => {
     if (!db) return;
     setDb({ ...db, [key]: value } as Db);
-    try {
-      const r = await fetch(`/api/${key}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(value),
-      });
-      if (!r.ok) throw new Error(await r.text());
-      setSaved(key as string);
+    const res = await saveKey(key, value);
+    if (res.ok) {
+      setSaved(`${key}（${res.via === 'api' ? '数据库' : '本地存储'}）`);
       setError(null);
       window.setTimeout(() => setSaved(null), 1800);
-    } catch (e) {
-      setError('保存失败：' + (e as Error).message);
+    } else {
+      setError('保存失败');
     }
   };
 
