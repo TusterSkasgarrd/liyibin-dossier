@@ -2403,6 +2403,337 @@ body::before {
   .adm-row { grid-template-columns: 1fr; }
 }
 
+
+/* ---------------- 12n. 开机动画 ---------------- */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: radial-gradient(130% 120% at 50% 38%, #0a3a6f 0%, #072c56 55%, #051f3e 100%);
+  cursor: pointer;
+}
+
+.intro__stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1500px;
+}
+
+/* 图纸：3D 运镜，从斜上方俯冲转正 */
+.intro__sheet {
+  position: relative;
+  width: min(560px, 88vw);
+  aspect-ratio: 4 / 3;
+  transform-origin: 50% 50%;
+  animation: camera-dive 1.6s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+@keyframes camera-dive {
+  0% {
+    transform: rotateX(48deg) rotateY(-16deg) translateZ(-300px) scale(0.7);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(0deg) rotateY(0deg) translateZ(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.intro__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(to right, rgba(191, 216, 245, 0.1) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(to bottom, rgba(191, 216, 245, 0.1) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(to right, rgba(191, 216, 245, 0.16) 0 1px, transparent 1px 100px),
+    repeating-linear-gradient(to bottom, rgba(191, 216, 245, 0.16) 0 1px, transparent 1px 100px);
+  border: 1px solid rgba(191, 216, 245, 0.5);
+  outline: 1px solid rgba(191, 216, 245, 0.22);
+  outline-offset: 7px;
+  clip-path: inset(0 100% 0 0);
+  animation: grid-sweep 0.8s 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes grid-sweep {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* 四角十字逐个点亮 */
+.intro__cross {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  opacity: 0;
+  animation: cross-in 0.22s var(--ease-out) both;
+}
+
+.intro__cross::before,
+.intro__cross::after {
+  content: '';
+  position: absolute;
+  background: var(--accent);
+}
+
+.intro__cross::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.intro__cross::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.intro__cross--tl { top: 10px; left: 10px; animation-delay: 1.35s; }
+.intro__cross--tr { top: 10px; right: 10px; animation-delay: 1.45s; }
+.intro__cross--bl { bottom: 10px; left: 10px; animation-delay: 1.55s; }
+.intro__cross--br { bottom: 10px; right: 10px; animation-delay: 1.65s; }
+
+@keyframes cross-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 尺寸线 + 光点 */
+.intro__dimline {
+  position: absolute;
+  left: 11%;
+  top: 20%;
+  width: 78%;
+  height: 22px;
+  border-top: 1px solid var(--accent);
+  transform-origin: left center;
+  animation: draw-line 0.5s 0.78s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.intro__dimline::before,
+.intro__dimline::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  width: 1px;
+  height: 10px;
+  background: var(--accent);
+}
+
+.intro__dimline::before { left: 0; }
+.intro__dimline::after { right: 0; }
+
+.intro__dimline em {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  background: #072c56;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+
+@keyframes draw-line {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.intro__dot {
+  position: absolute;
+  left: 0;
+  top: -4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px 3px rgba(255, 209, 102, 0.7);
+  animation: dot-run 0.55s 1.12s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes dot-run {
+  from {
+    left: 0;
+    opacity: 1;
+  }
+  to {
+    left: calc(100% - 7px);
+    opacity: 0;
+  }
+}
+
+/* 名字逐字弹出 */
+.intro__name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38%;
+  display: flex;
+  justify-content: center;
+  gap: 0.06em;
+  font-size: clamp(46px, 10vw, 74px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--txt);
+}
+
+.intro__name span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.4em) scale(0.55);
+  animation: char-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes char-pop {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 副标打字机 */
+.intro__sub {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 58%;
+  display: flex;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--txt-2);
+}
+
+.intro__sub span {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  border-right: 2px solid var(--accent);
+  padding-right: 4px;
+  animation: typing 0.7s 1.32s steps(20, end) both;
+}
+
+@keyframes typing {
+  to {
+    width: 100%;
+  }
+}
+
+/* 盖章 */
+.intro__stamp {
+  position: absolute;
+  right: 11%;
+  bottom: 18%;
+  width: 72px;
+  height: 72px;
+  opacity: 0;
+  transform: scale(3.2) rotate(-14deg);
+  animation: stamp-in 0.36s 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.intro__stamp svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes stamp-in {
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-14deg);
+  }
+}
+
+/* 图签栏 */
+.intro__titleblock {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  color: var(--txt-3);
+  opacity: 0;
+  animation: fade-up 0.4s 1.82s var(--ease-out) both;
+}
+
+.intro__titleblock span {
+  padding: 2px 8px;
+  border-right: 1px solid var(--line-weak);
+  border-bottom: 1px solid var(--line-weak);
+  white-space: nowrap;
+}
+
+.intro__titleblock span:nth-child(3n) {
+  border-right: none;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 退场：整张图纸甩走，遮罩淡出 */
+.intro.is-leaving .intro__sheet {
+  animation: sheet-away 0.44s cubic-bezier(0.5, -0.2, 0.7, 1) forwards;
+}
+
+@keyframes sheet-away {
+  to {
+    transform: translateY(-120%) rotateZ(-5deg);
+    opacity: 0;
+  }
+}
+
+.intro.is-leaving {
+  animation: intro-fade 0.5s 0.12s forwards;
+}
+
+@keyframes intro-fade {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* 减少动效：直接跳过 */
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}
+
 /* ---------------- 13. 响应式 ---------------- */
 
 @media (max-width: 1024px) {

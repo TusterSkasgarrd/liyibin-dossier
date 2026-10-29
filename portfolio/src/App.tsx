@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Admin } from './admin/Admin';
+import { IntroOverlay } from './components/IntroOverlay';
 import { DataProvider } from './data/store';
 import { BlueprintFrame } from './components/BlueprintFrame';
 import { Nav } from './components/Nav';
@@ -15,8 +17,27 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 
 export function App() {
+  const [introDone, setIntroDone] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (calm) return true;
+    // 同一会话内不重复播
+    return sessionStorage.getItem('intro-done') === '1';
+  });
+
   // 后台：/admin
   if (window.location.pathname.startsWith('/admin')) return <Admin />;
+
+  if (!introDone) {
+    return (
+      <IntroOverlay
+        onDone={() => {
+          sessionStorage.setItem('intro-done', '1');
+          setIntroDone(true);
+        }}
+      />
+    );
+  }
 
   return (
     <DataProvider>
